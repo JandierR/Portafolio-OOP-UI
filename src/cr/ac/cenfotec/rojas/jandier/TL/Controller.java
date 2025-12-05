@@ -2,8 +2,8 @@ package cr.ac.cenfotec.rojas.jandier.TL;
 
 import cr.ac.cenfotec.rojas.jandier.UI.UI;
 import cr.ac.cenfotec.rojas.jandier.bl.entities.Producto;
-import cr.ac.cenfotec.rojas.jandier.bl.logic.Carrito;
-import cr.ac.cenfotec.rojas.jandier.bl.logic.Tienda;
+import cr.ac.cenfotec.rojas.jandier.bl.logic.GestionCarrito;
+import cr.ac.cenfotec.rojas.jandier.bl.logic.GestionStockTienda;
 import cr.ac.cenfotec.rojas.jandier.dl.Data;
 
 import java.io.IOException;
@@ -11,9 +11,8 @@ import java.io.IOException;
 public class Controller {
     private UI interfaz = new UI();
     private Data data = new Data();
-    private Tienda tienda = new Tienda(data);
-    private Producto producto = new Producto();
-    private Carrito carrito = new Carrito(data, tienda);
+    private GestionStockTienda gestionStockTienda = new GestionStockTienda(data);
+    private GestionCarrito carrito = new GestionCarrito(data, gestionStockTienda);
 
 
     public Controller() {
@@ -54,7 +53,12 @@ public class Controller {
 //        System.out.println("Productos de mi carrito -->");
         interfaz.imprimirMensajeLn("Productos de mi carrito -->");
         for (Producto producto : data.getMiCarrito()) {
-            interfaz.imprimirMensajeLn("Producto: " + producto.getNombre() + " --> Precio: $" + producto.getPrecio());
+            if (producto.tieneDescuento()) {
+                interfaz.imprimirMensajeLn("Producto: " + producto.getNombre() + " --> Precio: $" + producto.getPrecio() + " (Se aplican descuentos al producto)");
+            } else {
+                interfaz.imprimirMensajeLn("Producto: " + producto.getNombre() + " --> Precio: $" + producto.getPrecio());
+            }
+
         }
     }
 
@@ -69,7 +73,7 @@ public class Controller {
         interfaz.imprimirMensajeLn("-".repeat(35));
         imprimirCarrito();
         interfaz.imprimirMensajeLn("-".repeat(35));
-        interfaz.imprimirMensajeLn(("Total --> " + tienda.escanearProductos()));
+        interfaz.imprimirMensajeLn(("Total --> " + gestionStockTienda.escanearProductos()));
         interfaz.imprimirMensajeLn("-".repeat(35));
     }
 
@@ -78,7 +82,7 @@ public class Controller {
         interfaz.imprimirMensajeLn("Ingrese el ID del producto que desea agregar: ");
         int id = Integer.parseInt(interfaz.leerTexto());
 
-        Producto producto = tienda.buscarProductoId(id);
+        Producto producto = gestionStockTienda.buscarProducto(id);
 
         interfaz.imprimirMensajeLn(carrito.agregarProducto(producto, id));
     }
@@ -93,7 +97,7 @@ public class Controller {
 
         //Se obtiene una referencia al producto con el producto que retorna la metodo de buscarProductoId(id)
         //Con el anterior id como argumento
-        Producto producto = tienda.buscarProductoId(id);
+        Producto producto = gestionStockTienda.buscarProducto(id);
 
         interfaz.imprimirMensajeLn(carrito.eliminarProducto(producto, id));
 
