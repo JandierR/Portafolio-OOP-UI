@@ -8,6 +8,9 @@ import cr.ac.cenfotec.rojas.jandier.dl.Data;
 
 import java.io.IOException;
 
+/**
+ * The type Controller.
+ */
 public class Controller {
     private UI interfaz = new UI();
     private Data data = new Data();
@@ -15,9 +18,17 @@ public class Controller {
     private GestionCarrito carrito = new GestionCarrito(data, gestionStockTienda);
 
 
+    /**
+     * Instantiates a new Controller.
+     */
     public Controller() {
     }
 
+    /**
+     * Start.
+     *
+     * @throws IOException the io exception
+     */
     public void start() throws IOException {
         int opcion;
 
@@ -29,6 +40,12 @@ public class Controller {
         } while (opcion != 0);
     }
 
+    /**
+     * Procesar opcion.
+     *
+     * @param opcion the opcion
+     * @throws IOException the io exception
+     */
     public void procesarOpcion(int opcion) throws IOException {
         switch (opcion) {
             case 1 -> mostrarStock();
@@ -41,12 +58,18 @@ public class Controller {
     }
 
 
+    /**
+     * Mostrar stock.
+     */
     public void mostrarStock() {
         for (Producto producto : data.getProductosStock()) {
             interfaz.imprimirMensajeLn("[" + producto.getNombre() + " (#" + producto.getId() + ")] cantidad -> " + producto.getCantidad() + " -> precio -> $" + producto.getPrecio());
         }
     }
 
+    /**
+     * Imprimir carrito.
+     */
     public void imprimirCarrito() {
 
         //Tengo que buscar una manera de agregar la cantidad de tal producto en mi carrito
@@ -62,6 +85,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Imprimir factura.
+     */
     public void imprimirFactura() {
         if (data.getMiCarrito().isEmpty()) {
             interfaz.imprimirMensajeLn("El carrito está vacío. No se puede generar factura.");
@@ -77,6 +103,11 @@ public class Controller {
         interfaz.imprimirMensajeLn("-".repeat(35));
     }
 
+    /**
+     * Elegir producto.
+     *
+     * @throws IOException the io exception
+     */
     public void elegirProducto() throws IOException {
 
         interfaz.imprimirMensajeLn("Ingrese el ID del producto que desea agregar: ");
@@ -87,6 +118,11 @@ public class Controller {
         interfaz.imprimirMensajeLn(carrito.agregarProducto(producto, id));
     }
 
+    /**
+     * Devolver producto.
+     *
+     * @throws IOException the io exception
+     */
     public void devolverProducto() throws IOException {
 
         //Se solicita al usuario el ID del producto
